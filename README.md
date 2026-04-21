@@ -1,4 +1,4 @@
-# ☕ CoffeeAgntcy Optimization — Group 27
+# CoffeeAgntcy Optimization — Group 27
 
 > Advanced Python for Data Science | Spring 2026
 
@@ -9,7 +9,7 @@
 
 ---
 
-## 👥 Team — Group 27
+## Team — Group 27
 
 | Name | Role |
 |------|------|
@@ -18,7 +18,7 @@
 
 ---
 
-## 🎯 Project Overview
+## Project Overview
 
 This project profiles and optimizes **CoffeeAgntcy** — a real-world distributed multi-agent AI system built on the open-source [AGNTCY](https://github.com/agntcy/coffeeAgntcy) infrastructure.
 
@@ -28,7 +28,7 @@ CoffeeAgntcy simulates a fictitious coffee company where AI agents communicate w
 
 ---
 
-## 🏗️ System Architecture
+## System Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────┐
@@ -75,7 +75,7 @@ CoffeeAgntcy simulates a fictitious coffee company where AI agents communicate w
 
 ---
 
-## 📁 Repository Structure
+## Repository Structure
 
 ```
 Coffee-Agentcy-Optimization/
@@ -90,7 +90,7 @@ Coffee-Agentcy-Optimization/
 
 ---
 
-## 🚀 How to Run This Project
+## How to Run This Project
 
 ### Prerequisites
 
@@ -164,7 +164,7 @@ This runs three tests:
 
 ---
 
-## 🔬 Phase 1: Profiling — What We Measured
+## Phase 1: Profiling — What We Measured
 
 We wrote `profiler.py` using three Python profiling tools:
 
@@ -226,7 +226,7 @@ docker stats --no-stream
 
 ---
 
-## 📊 Baseline Results (Before Optimization)
+## Baseline Results (Before Optimization)
 
 ### Latency
 
@@ -256,7 +256,7 @@ docker stats --no-stream
 | slim | 0.00% | 3.97 MiB |
 | clickhouse | 5.58% | 577.3 MiB |
 
-### 🔑 Most Important Finding — cProfile Output
+### Most Important Finding — cProfile Output
 
 ```
 560 function calls in 2.107 seconds
@@ -274,7 +274,7 @@ This means Python itself runs in microseconds. The entire 2.1 seconds is spent *
 
 ---
 
-## ⚡ Phase 2: Optimizations
+## Phase 2: Optimizations
 
 ### Optimization 1 — Asyncio + Concurrent Requests
 
@@ -420,7 +420,7 @@ async def send_with_retry(session, prompt, retries=3):
 
 ---
 
-## 📈 Final Results — Complete Before vs After
+## Final Results — Complete Before vs After
 
 ### Performance Comparison Table
 
@@ -474,7 +474,7 @@ Every TCP connection has setup overhead. Reusing connections with `TCPConnector`
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 | Technology | Purpose |
 |------------|---------|
@@ -491,7 +491,7 @@ Every TCP connection has setup overhead. Reusing connections with `TCPConnector`
 
 ---
 
-## 📚 References
+## References
 
 - [CoffeeAgntcy Repository](https://github.com/agntcy/coffeeAgntcy)
 - [AGNTCY Documentation](https://docs.agntcy.org)
