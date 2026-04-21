@@ -105,21 +105,21 @@ Make sure you have these installed:
 
 ---
 
-### Step 1 — Clone & Start CoffeeAgntcy
+### Step 1 — Clone This Repo
 
 ```bash
-# Clone the original CoffeeAgntcy repo
-git clone https://github.com/agntcy/coffeeAgntcy.git
-cd coffeeAgntcy/coffeeAGNTCY/coffee_agents/corto
-
-# Copy environment file
+git clone https://github.com/Desaiadi/Coffee-Agentcy-Optimization.git
+cd Coffee-Agentcy-Optimization/coffeeAGNTCY/coffee_agents/corto
 cp .env.example .env
 ```
 
-Open `.env` and add these two lines at the bottom:
+Open `.env` and add these lines at the bottom:
 ```env
 LLM_MODEL=openai/gpt-4o
 OPENAI_API_KEY=your-openai-api-key-here
+OPENAI_ENDPOINT=https://api.openai.com/v1
+OPENAI_MODEL_NAME=gpt-4o
+
 ```
 
 Start all containers:
@@ -127,14 +127,7 @@ Start all containers:
 docker compose up
 ```
 
-Wait for all containers to start (~2 minutes), then open:
-```
-http://localhost:3000
-```
-
-You should see the CoffeeAgntcy UI with two agents connected.
-
----
+Wait ~2 minutes, then open `http://localhost:3000`
 
 ### Step 2 — Install Python Dependencies
 
