@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="None">
+        
+        
+        <link rel="shortcut icon" href="img/favicon.ico">
+        <title>CoffeeAgntcy Documentation</title>
+        <link href="css/bootstrap.min.css" rel="stylesheet">
+        <link href="css/fontawesome.min.css" rel="stylesheet">
+        <link href="css/brands.min.css" rel="stylesheet">
+        <link href="css/solid.min.css" rel="stylesheet">
+        <link href="css/v4-font-face.min.css" rel="stylesheet">
+        <link href="css/base.css" rel="stylesheet">
+        <link id="hljs-light" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" >
+        <link id="hljs-dark" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" disabled>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script> 
+    </head>
+
+    <body class="homepage">
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href=".">CoffeeAgntcy Documentation</a>
+                <!-- Expander button -->
+                <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="nav-item">
+                                <a href="." class="nav-link active" aria-current="page">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="CONTRIBUTING/" class="nav-link">Contributing</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="CHANGELOG/" class="nav-link">Changelog</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="CODE_OF_CONDUCT/" class="nav-link">Code of Conduct</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="SECURITY/" class="nav-link">Security</a>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav ms-md-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                            <li class="nav-item">
+                                <a rel="prev" class="nav-link disabled">
+                                    <i class="fa fa-arrow-left"></i> Previous
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a rel="next" href="CONTRIBUTING/" class="nav-link">
+                                    Next <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-bs-level="1"><a href="#coffeeagntcy-optimization-group-27" class="nav-link">CoffeeAgntcy Optimization — Group 27</a>
+              <ul class="nav flex-column">
+            <li class="nav-item" data-bs-level="2"><a href="#team-group-27" class="nav-link">Team — Group 27</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#project-overview" class="nav-link">Project Overview</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#system-architecture" class="nav-link">System Architecture</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#repository-structure" class="nav-link">Repository Structure</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#how-to-run-this-project" class="nav-link">How to Run This Project</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#phase-1-profiling-what-we-measured" class="nav-link">Phase 1: Profiling — What We Measured</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#baseline-results-before-optimization" class="nav-link">Baseline Results (Before Optimization)</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#phase-2-optimizations" class="nav-link">Phase 2: Optimizations</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#final-results-complete-before-vs-after" class="nav-link">Final Results — Complete Before vs After</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#key-lessons-learned" class="nav-link">💡 Key Lessons Learned</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#future-work" class="nav-link">🔮 Future Work</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#tech-stack" class="nav-link">Tech Stack</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#references" class="nav-link">References</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<h1 id="coffeeagntcy-optimization-group-27">CoffeeAgntcy Optimization — Group 27</h1>
+<blockquote>
+<p>Advanced Python for Data Science | Spring 2026</p>
+</blockquote>
+<p><a href="https://python.org"><img alt="Python" src="https://img.shields.io/badge/Python-3.14-blue" /></a>
+<a href="https://docker.com"><img alt="Docker" src="https://img.shields.io/badge/Docker-29.0-blue" /></a>
+<a href="https://openai.com"><img alt="OpenAI" src="https://img.shields.io/badge/LLM-GPT--4o-green" /></a>
+<a href="LICENSE"><img alt="License" src="https://img.shields.io/badge/License-Apache%202.0-orange" /></a></p>
+<hr />
+<h2 id="team-group-27">Team — Group 27</h2>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Deepali Balakrishna Ksheersagar</td>
+<td>Profiling &amp; Analysis</td>
+</tr>
+<tr>
+<td>Aditya Desai</td>
+<td>Optimization &amp; Implementation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="project-overview">Project Overview</h2>
+<p>This project profiles and optimizes <strong>CoffeeAgntcy</strong> — a real-world distributed multi-agent AI system built on the open-source <a href="https://github.com/agntcy/coffeeAgntcy">AGNTCY</a> infrastructure.</p>
+<p>CoffeeAgntcy simulates a fictitious coffee company where AI agents communicate with each other over a message bus to answer questions about coffee origins, flavors, and profiles.</p>
+<p><strong>Our goal:</strong> Identify performance bottlenecks in this distributed agent workflow and apply Advanced Python techniques to optimize them — then measure and compare the results with real data.</p>
+<hr />
+<h2 id="system-architecture">System Architecture</h2>
+<pre><code>┌─────────────────────────────────────────────────────────┐
+│                    User (Browser UI)                    │
+│                  http://localhost:3000                  │
+└─────────────────────┬───────────────────────────────────┘
+                      │ HTTP POST /agent/prompt
+┌─────────────────────▼───────────────────────────────────┐
+│           Supervisor Agent — Exchange Server            │
+│        (LangGraph orchestrated, port 8000)              │
+└─────────────────────┬───────────────────────────────────┘
+                      │ A2A Protocol over SLIM message bus
+┌─────────────────────▼───────────────────────────────────┐
+│             SLIM — Secure Low-Latency                   │
+│            Interactive Messaging Bus                    │
+│                   (port 46357)                          │
+└─────────────────────┬───────────────────────────────────┘
+                      │
+┌─────────────────────▼───────────────────────────────────┐
+│           Grader Agent — Farm Server                    │
+│        (Q Grader Sommelier, LangGraph + GPT-4o)         │
+└─────────────────────┬───────────────────────────────────┘
+                      │ API Call
+┌─────────────────────▼───────────────────────────────────┐
+│                  OpenAI GPT-4o API                      │
+│              (External — main bottleneck)               │
+└─────────────────────────────────────────────────────────┘
+</code></pre>
+<h3 id="all-10-docker-containers-running">All 10 Docker Containers Running</h3>
+<table>
+<thead>
+<tr>
+<th>Container</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>exchange-server</code></td>
+<td>Supervisor Agent — receives user prompts</td>
+</tr>
+<tr>
+<td><code>farm-server</code></td>
+<td>Grader Agent — answers using AI</td>
+</tr>
+<tr>
+<td><code>slim</code></td>
+<td>Message bus between agents</td>
+</tr>
+<tr>
+<td><code>nats</code></td>
+<td>Backup pub/sub messaging system</td>
+</tr>
+<tr>
+<td><code>clickhouse-server</code></td>
+<td>Database for conversation history</td>
+</tr>
+<tr>
+<td><code>grafana</code></td>
+<td>Performance dashboard</td>
+</tr>
+<tr>
+<td><code>otel-collector</code></td>
+<td>OpenTelemetry data collector</td>
+</tr>
+<tr>
+<td><code>mce-api-layer</code></td>
+<td>Metrics computation API</td>
+</tr>
+<tr>
+<td><code>metrics-computation-engine</code></td>
+<td>Processes performance metrics</td>
+</tr>
+<tr>
+<td><code>ui</code></td>
+<td>Frontend website</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="repository-structure">Repository Structure</h2>
+<pre><code>Coffee-Agentcy-Optimization/
+└── Version-1/
+    ├── README.md                              ← You are here
+    ├── profiler.py                            ← Baseline profiling script
+    ├── optimized.py                           ← Optimization v1 (asyncio + cache)
+    ├── optimized_v2.py                        ← Optimization v2 (advanced)
+    └── Presentation/
+        └── Group_27_CoffeeAgntcy_Optimized.pptx
+</code></pre>
+<hr />
+<h2 id="how-to-run-this-project">How to Run This Project</h2>
+<h3 id="prerequisites">Prerequisites</h3>
+<p>Make sure you have these installed:</p>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Version</th>
+<th>Install</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Python</td>
+<td>3.11+</td>
+<td><a href="https://python.org">python.org</a></td>
+</tr>
+<tr>
+<td>Docker Desktop</td>
+<td>Any</td>
+<td><a href="https://docker.com">docker.com</a></td>
+</tr>
+<tr>
+<td>Git</td>
+<td>Any</td>
+<td><a href="https://git-scm.com">git-scm.com</a></td>
+</tr>
+<tr>
+<td>OpenAI API Key</td>
+<td>—</td>
+<td><a href="https://platform.openai.com">platform.openai.com</a></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="step-1-clone-this-repo">Step 1 — Clone This Repo</h3>
+<pre><code class="language-bash">git clone https://github.com/Desaiadi/Coffee-Agentcy-Optimization.git
+cd Coffee-Agentcy-Optimization/coffeeAGNTCY/coffee_agents/corto
+cp .env.example .env
+</code></pre>
+<p>Open <code>.env</code> and add these lines at the bottom:</p>
+<pre><code class="language-env">LLM_MODEL=openai/gpt-4o
+OPENAI_API_KEY=your-openai-api-key-here
+OPENAI_ENDPOINT=https://api.openai.com/v1
+OPENAI_MODEL_NAME=gpt-4o
+
+</code></pre>
+<p>Start all containers:</p>
+<pre><code class="language-bash">docker compose up
+</code></pre>
+<p>Wait ~2 minutes, then open <code>http://localhost:3000</code></p>
+<h3 id="step-2-install-python-dependencies">Step 2 — Install Python Dependencies</h3>
+<pre><code class="language-bash">pip install memory_profiler aiohttp
+</code></pre>
+<hr />
+<h3 id="step-3-run-baseline-profiler">Step 3 — Run Baseline Profiler</h3>
+<pre><code class="language-bash">python profiler.py
+</code></pre>
+<p>This will output:
+- Latency per request (min, max, avg)
+- Throughput (requests per second)
+- Peak and average memory usage
+- cProfile breakdown of all function calls</p>
+<hr />
+<h3 id="step-4-run-optimized-version">Step 4 — Run Optimized Version</h3>
+<pre><code class="language-bash">python optimized_v2.py
+</code></pre>
+<p>This runs three tests:
+1. Cold run (no cache) — concurrent requests
+2. Warm run (all cached) — instant responses
+3. Mixed run — some cached, some new</p>
+<hr />
+<h2 id="phase-1-profiling-what-we-measured">Phase 1: Profiling — What We Measured</h2>
+<p>We wrote <code>profiler.py</code> using three Python profiling tools:</p>
+<h3 id="tool-1-timeperf_counter">Tool 1: <code>time.perf_counter()</code></h3>
+<p>The most precise timer in Python. Measures exact wall-clock time for each request.</p>
+<pre><code class="language-python">start = time.perf_counter()
+result = send_request(prompt)
+elapsed = time.perf_counter() - start
+print(f&quot;Request took: {elapsed:.3f}s&quot;)
+</code></pre>
+<p><strong>Think of it as:</strong> A digital stopwatch with nanosecond precision.</p>
+<hr />
+<h3 id="tool-2-cprofile">Tool 2: <code>cProfile</code></h3>
+<p>Records every single Python function that was called, how many times it was called, and how long it ran.</p>
+<pre><code class="language-python">profiler = cProfile.Profile()
+profiler.enable()
+send_request(&quot;What does Ethiopian coffee taste like?&quot;)
+profiler.disable()
+
+stats = pstats.Stats(profiler)
+stats.sort_stats(&quot;cumulative&quot;)
+stats.print_stats(10)
+</code></pre>
+<p><strong>Think of it as:</strong> A security camera that records every step of the program.</p>
+<hr />
+<h3 id="tool-3-memory_profiler">Tool 3: <code>memory_profiler</code></h3>
+<p>Monitors how much RAM the program uses during execution, sampled every 0.1 seconds.</p>
+<pre><code class="language-python">from memory_profiler import memory_usage
+mem = memory_usage((send_request, (prompt,)), interval=0.1)
+print(f&quot;Peak memory: {max(mem):.2f} MiB&quot;)
+</code></pre>
+<p><strong>Think of it as:</strong> A RAM meter that watches your program's memory in real time.</p>
+<hr />
+<h3 id="tool-4-docker-stats">Tool 4: <code>docker stats</code></h3>
+<p>Measures CPU and memory usage of each Docker container while a request is running.</p>
+<pre><code class="language-bash">docker stats --no-stream
+</code></pre>
+<hr />
+<h2 id="baseline-results-before-optimization">Baseline Results (Before Optimization)</h2>
+<h3 id="latency">Latency</h3>
+<table>
+<thead>
+<tr>
+<th>Run</th>
+<th>Time</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Request 1</td>
+<td>3.001s</td>
+</tr>
+<tr>
+<td>Request 2</td>
+<td>2.093s</td>
+</tr>
+<tr>
+<td>Request 3</td>
+<td>2.830s</td>
+</tr>
+<tr>
+<td><strong>Average</strong></td>
+<td><strong>2.641s</strong></td>
+</tr>
+<tr>
+<td><strong>Min</strong></td>
+<td><strong>2.093s</strong></td>
+</tr>
+<tr>
+<td><strong>Max</strong></td>
+<td><strong>3.001s</strong></td>
+</tr>
+</tbody>
+</table>
+<h3 id="throughput-memory">Throughput &amp; Memory</h3>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Throughput</td>
+<td>0.379 requests/second</td>
+</tr>
+<tr>
+<td>Peak Memory</td>
+<td>34.34 MiB</td>
+</tr>
+<tr>
+<td>Avg Memory</td>
+<td>33.37 MiB</td>
+</tr>
+</tbody>
+</table>
+<h3 id="container-resources-during-request">Container Resources (During Request)</h3>
+<table>
+<thead>
+<tr>
+<th>Container</th>
+<th>CPU Usage</th>
+<th>Memory</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>exchange-server</td>
+<td><strong>48.59%</strong></td>
+<td>711.6 MiB</td>
+</tr>
+<tr>
+<td>farm-server</td>
+<td>0.00%</td>
+<td>422 MiB</td>
+</tr>
+<tr>
+<td>slim</td>
+<td>0.00%</td>
+<td>3.97 MiB</td>
+</tr>
+<tr>
+<td>clickhouse</td>
+<td>5.58%</td>
+<td>577.3 MiB</td>
+</tr>
+</tbody>
+</table>
+<h3 id="most-important-finding-cprofile-output">Most Important Finding — cProfile Output</h3>
+<pre><code>560 function calls in 2.107 seconds
+
+ncalls  tottime  percall  cumtime  function
+     1    0.000    0.000    2.107    profiler.py:17(send_request)
+     1    0.000    0.000    2.106    urllib/request.py(urlopen)
+     1    0.000    0.000    2.106    urllib/request.py(open)
+     ...
+</code></pre>
+<p><strong><code>tottime = 0.000</code> for ALL Python functions.</strong></p>
+<p>This means Python itself runs in microseconds. The entire 2.1 seconds is spent <strong>waiting for the network</strong> (the OpenAI API response). This told us that making Python code faster wouldn't help — we needed to change <strong>how</strong> we make requests.</p>
+<hr />
+<h2 id="phase-2-optimizations">Phase 2: Optimizations</h2>
+<h3 id="optimization-1-asyncio-concurrent-requests">Optimization 1 — Asyncio + Concurrent Requests</h3>
+<h4 id="the-problem">The Problem</h4>
+<p>Before optimization, requests ran <strong>sequentially</strong> — one at a time:</p>
+<pre><code>Timeline:
+[Request 1: 2.6s wait...] [Request 2: 2.6s wait...] [Request 3: 2.6s wait...]
+Total = 7.9 seconds
+</code></pre>
+<p>Python sat idle while waiting for the AI to respond, then started the next request.</p>
+<h4 id="the-fix">The Fix</h4>
+<p>Use Python's <code>asyncio</code> (asynchronous programming) to send all requests <strong>at the same time</strong>:</p>
+<pre><code class="language-python">import asyncio
+import aiohttp
+
+async def send_request_async(session, prompt):
+    async with session.post(API_URL, json={&quot;prompt&quot;: prompt}) as resp:
+        return await resp.json()
+
+async def run_concurrent():
+    async with aiohttp.ClientSession() as session:
+        # Create all tasks at once
+        tasks = [send_request_async(session, p) for p in prompts]
+        # Run them ALL simultaneously
+        results = await asyncio.gather(*tasks)
+    return results
+
+asyncio.run(run_concurrent())
+</code></pre>
+<h4 id="the-result">The Result</h4>
+<pre><code>Timeline:
+[Request 1: 6.5s ─────────────────────────────────►]
+[Request 2: 5.8s ───────────────────────────────►  ]  All done in 6.5s!
+[Request 3: 6.1s ────────────────────────────────► ]
+</code></pre>
+<p><strong>Wall time: 7.924s → 6.571s = 17% faster</strong></p>
+<hr />
+<h3 id="optimization-2-response-caching">Optimization 2 — Response Caching</h3>
+<h4 id="the-problem_1">The Problem</h4>
+<p>Every time someone asks <em>"What does Ethiopian coffee taste like?"</em>, the system makes a brand new API call to OpenAI, waits 2-3 seconds, and pays for a new API call — even if we already know the answer.</p>
+<h4 id="the-fix_1">The Fix</h4>
+<p>Store answers in a dictionary (cache). On the second request for the same question, return the stored answer instantly:</p>
+<pre><code class="language-python">import hashlib
+
+cache = {}
+
+def cache_key(prompt):
+    # Convert prompt to a unique identifier
+    return hashlib.md5(prompt.lower().strip().encode()).hexdigest()
+
+async def send_request_cached(session, prompt):
+    key = cache_key(prompt)
+
+    # Check if we already know the answer
+    if key in cache:
+        print(&quot;Cache hit! Returning instantly...&quot;)
+        return cache[key], 0.0   # ← returns in 0 milliseconds
+
+    # First time seeing this question — ask the AI
+    result = await send_request_async(session, prompt)
+    cache[key] = result['response']   # ← remember the answer
+    return result['response'], elapsed
+</code></pre>
+<h4 id="the-result_1">The Result</h4>
+<pre><code>First ask:   &quot;Ethiopian coffee taste?&quot; → 2.64 seconds (API call)
+Second ask:  &quot;Ethiopian coffee taste?&quot; → 0.000 seconds (cache hit!)
+</code></pre>
+<p><strong>Repeat query speed: 2.64s → 0.000s = 100% faster</strong>
+<strong>Cached throughput: 0.379 → 4,701 req/sec = 12,000x improvement</strong></p>
+<hr />
+<h3 id="optimization-3-connection-pooling-semaphore">Optimization 3 — Connection Pooling + Semaphore</h3>
+<h4 id="the-problem_2">The Problem</h4>
+<p>Every HTTP request was opening a brand new TCP connection to the server, using it once, then closing it. This is like picking up a new disposable phone for every phone call instead of keeping one open.</p>
+<p>Also, sending too many requests simultaneously could overwhelm the server.</p>
+<h4 id="the-fix_2">The Fix</h4>
+<p><strong>Connection Pooling:</strong> Keep 20 connections open and reuse them:</p>
+<pre><code class="language-python">connector = aiohttp.TCPConnector(
+    limit=20,              # Keep 20 connections ready
+    limit_per_host=10,     # Max 10 to same server
+    keepalive_timeout=30,  # Keep connections alive for 30s
+    ttl_dns_cache=300      # Cache DNS lookup for 5 minutes
+)
+</code></pre>
+<p><strong>Semaphore:</strong> Limit to 3 concurrent requests max to avoid server overload:</p>
+<pre><code class="language-python">semaphore = asyncio.Semaphore(3)
+
+async def bounded_request(session, prompt):
+    async with semaphore:   # Only 3 can run at once
+        return await send_with_retry(session, prompt)
+</code></pre>
+<p><strong>Retry with Exponential Backoff:</strong> If a request fails, wait and try again:</p>
+<pre><code class="language-python">async def send_with_retry(session, prompt, retries=3):
+    for attempt in range(retries):
+        try:
+            return await send_request_async(session, prompt)
+        except Exception:
+            wait = 2 ** attempt   # Wait 1s, 2s, 4s...
+            await asyncio.sleep(wait)
+</code></pre>
+<h4 id="the-result_2">The Result</h4>
+<p><strong>Throughput: 0.379 → 0.514 req/sec = 36% improvement</strong></p>
+<hr />
+<h2 id="final-results-complete-before-vs-after">Final Results — Complete Before vs After</h2>
+<h3 id="performance-comparison-table">Performance Comparison Table</h3>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Baseline</th>
+<th>Optimized (Cold)</th>
+<th>Optimized (Cached)</th>
+<th>Best Improvement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Wall Time (3 req)</td>
+<td>7.924s</td>
+<td>6.571s</td>
+<td>0.001s</td>
+<td><strong>↓ 99.99%</strong></td>
+</tr>
+<tr>
+<td>Throughput</td>
+<td>0.379 req/s</td>
+<td>0.514 req/s</td>
+<td>4,701 req/s</td>
+<td><strong>↑ 12,000x</strong></td>
+</tr>
+<tr>
+<td>Repeat Query Time</td>
+<td>2.641s</td>
+<td>2.641s</td>
+<td>0.000s</td>
+<td><strong>↓ 100%</strong></td>
+</tr>
+<tr>
+<td>Avg Memory</td>
+<td>33.37 MiB</td>
+<td>30.17 MiB</td>
+<td>30.17 MiB</td>
+<td><strong>↓ 9.6%</strong></td>
+</tr>
+<tr>
+<td>Peak Memory</td>
+<td>34.34 MiB</td>
+<td>38.91 MiB</td>
+<td>38.91 MiB</td>
+<td>slight increase</td>
+</tr>
+</tbody>
+</table>
+<h3 id="throughput-breakdown">Throughput Breakdown</h3>
+<pre><code>Baseline Sequential:   ████░░░░░░░░░░░░░░░░  0.379 req/sec
+Optimized Concurrent:  █████░░░░░░░░░░░░░░░  0.514 req/sec  (+36%)
+Mixed (partial cache): ██████░░░░░░░░░░░░░░  0.649 req/sec  (+71%)
+Full Cache (warm):     ████████████████████  4,701 req/sec  (+12,000x)
+</code></pre>
+<hr />
+<h2 id="key-lessons-learned">💡 Key Lessons Learned</h2>
+<h3 id="1-profile-first-optimize-second">1. Profile First, Optimize Second</h3>
+<p>Without <code>cProfile</code>, we might have spent time optimizing Python code that was already running in microseconds. The profiler revealed the real bottleneck was network I/O — completely changing our optimization strategy.</p>
+<h3 id="2-the-bottleneck-was-not-where-we-expected">2. The Bottleneck Was Not Where We Expected</h3>
+<p>We expected Python code to be slow. Instead, <code>tottime = 0.000</code> for all Python functions proved the code was instant — 99.9% of time was spent waiting for the OpenAI API. This is called an <strong>I/O-bound</strong> program.</p>
+<h3 id="3-caching-has-the-highest-roi">3. Caching Has the Highest ROI</h3>
+<p>A simple dictionary cache gave us a <strong>12,000x speedup</strong> for repeat queries with just 5 lines of code. In real production systems, this is implemented with Redis.</p>
+<h3 id="4-asyncio-is-essential-for-io-bound-tasks">4. Asyncio Is Essential for I/O-Bound Tasks</h3>
+<p>When your program spends most of its time waiting (for APIs, databases, files), asyncio lets you do something useful during that wait instead of sitting idle.</p>
+<h3 id="5-connection-pooling-reduces-hidden-overhead">5. Connection Pooling Reduces Hidden Overhead</h3>
+<p>Every TCP connection has setup overhead. Reusing connections with <code>TCPConnector</code> eliminates this overhead and improves throughput by 36%.</p>
+<hr />
+<h2 id="future-work">🔮 Future Work</h2>
+<table>
+<thead>
+<tr>
+<th>Improvement</th>
+<th>Description</th>
+<th>Expected Gain</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Redis Cache</strong></td>
+<td>Persistent cache that survives restarts</td>
+<td>Same 12,000x but permanent</td>
+</tr>
+<tr>
+<td><strong>Auto-scaling</strong></td>
+<td>Multiple farm agent instances</td>
+<td>Linear scaling with workers</td>
+</tr>
+<tr>
+<td><strong>Numba JIT</strong></td>
+<td>Accelerate serialization code</td>
+<td>10-100x for CPU-bound parts</td>
+</tr>
+<tr>
+<td><strong>Request Batching</strong></td>
+<td>Group similar queries together</td>
+<td>Reduce API calls by 50%+</td>
+</tr>
+<tr>
+<td><strong>Streaming Responses</strong></td>
+<td>Stream tokens as they generate</td>
+<td>Perceived latency ↓ 80%</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="tech-stack">Tech Stack</h2>
+<table>
+<thead>
+<tr>
+<th>Technology</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Python 3.14</td>
+<td>Main programming language</td>
+</tr>
+<tr>
+<td>asyncio</td>
+<td>Asynchronous concurrent programming</td>
+</tr>
+<tr>
+<td>aiohttp</td>
+<td>Async HTTP client with connection pooling</td>
+</tr>
+<tr>
+<td>cProfile</td>
+<td>Built-in Python function profiler</td>
+</tr>
+<tr>
+<td>memory_profiler</td>
+<td>RAM usage tracking</td>
+</tr>
+<tr>
+<td>Docker / Docker Compose</td>
+<td>Container orchestration</td>
+</tr>
+<tr>
+<td>LangGraph</td>
+<td>Agent workflow orchestration</td>
+</tr>
+<tr>
+<td>SLIM</td>
+<td>Secure agent-to-agent messaging bus</td>
+</tr>
+<tr>
+<td>OpenAI GPT-4o</td>
+<td>Large language model</td>
+</tr>
+<tr>
+<td>litellm</td>
+<td>LLM provider abstraction layer</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="references">References</h2>
+<ul>
+<li><a href="https://github.com/agntcy/coffeeAgntcy">CoffeeAgntcy Repository</a></li>
+<li><a href="https://docs.agntcy.org">AGNTCY Documentation</a></li>
+<li><a href="https://docs.python.org/3/library/asyncio.html">Python asyncio docs</a></li>
+<li><a href="https://docs.aiohttp.org">aiohttp Documentation</a></li>
+<li><a href="https://github.com/pythonprofilers/memory_profiler">memory_profiler</a></li>
+<li><a href="https://docs.python.org/3/library/profile.html">cProfile docs</a></li>
+</ul>
+<hr />
+<p><em>Group 27 — Advanced Python for Data Science — Spring 2026</em></p></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script src="js/bootstrap.bundle.min.js"></script>
+        <script>
+            var base_url = ".",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="js/base.js"></script>
+        <script src="search/main.js"></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>From here you can search these documents. Enter your search terms below.</p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results" data-no-results-text="No results found"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>
+
+<!--
+MkDocs version : 1.6.1
+Build Date UTC : 2026-04-21 23:51:01.868400+00:00
+-->
