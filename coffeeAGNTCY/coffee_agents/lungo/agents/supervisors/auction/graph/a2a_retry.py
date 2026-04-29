@@ -63,8 +63,18 @@ def _is_no_payload_error(exc: BaseException) -> bool:
     return isinstance(exc, AttributeError) and getattr(exc, "name", None) == "payload"
 
 
-_A2A_MAX_ATTEMPTS = 5
-_A2A_BACKOFF_BASE = 3
+# Lungo_Improvement_Opt9: tightened retry policy to reduce worst-case tail latency.
+# Old policy: 5 attempts, base 3 → delays 1s, 3s, 9s, 27s = 40s worst case.
+# This was too aggressive for an interactive system: a single unresponsive farm
+# could hold an asyncio worker for up to 40 seconds, blocking other requests.
+# New policy: 3 attempts, base 2, max 8s per delay → 1s, 2s cap = ≤11s worst case.
+# The tighter cap keeps p95 latency low while still tolerating transient blips.
+# Old values:
+# _A2A_MAX_ATTEMPTS = 5
+# _A2A_BACKOFF_BASE = 3
+_A2A_MAX_ATTEMPTS = 3
+_A2A_BACKOFF_BASE = 2
+_A2A_MAX_DELAY_SECONDS = 8  # Lungo_Improvement_Opt9: hard cap on per-attempt backoff delay
 
 logger = logging.getLogger(__name__)
 
@@ -72,8 +82,8 @@ logger = logging.getLogger(__name__)
 async def send_a2a_with_retry(client, message):
     """
     Send message to A2A client. On timeout or no response, retry
-    up to 4 times (5 attempts total) with exponential backoff (base 3, delays 1s, 3s,
-    9s, 27s).
+    up to 2 times (3 attempts total) with exponential backoff (base 2, max 8s delay).
+    Lungo_Improvement_Opt9: was 5 attempts / base-3 (40s worst case); now 3 / base-2 (≤11s).
 
     The A2A SDK (>=0.3.x) client.send_message() returns an AsyncIterator.
     This function collects all events from the stream and returns them as a list.
@@ -88,7 +98,9 @@ async def send_a2a_with_retry(client, message):
                 return events
 
             if attempt < _A2A_MAX_ATTEMPTS - 1:
-                delay = _A2A_BACKOFF_BASE ** attempt
+                # Lungo_Improvement_Opt9: clamp delay to _A2A_MAX_DELAY_SECONDS (8s).
+                # Old code: delay = _A2A_BACKOFF_BASE ** attempt  (unbounded)
+                delay = min(_A2A_BACKOFF_BASE ** attempt, _A2A_MAX_DELAY_SECONDS)
                 logger.warning(
                     "A2A request had no response, retrying (attempt %s/%s) after %ss.",
                     attempt + 2,
@@ -106,7 +118,9 @@ async def send_a2a_with_retry(client, message):
         except Exception as e:
             if _is_timeout_error(e):
                 if attempt < _A2A_MAX_ATTEMPTS - 1:
-                    delay = _A2A_BACKOFF_BASE ** attempt
+                    # Lungo_Improvement_Opt9: clamp delay to _A2A_MAX_DELAY_SECONDS (8s).
+                    # Old code: delay = _A2A_BACKOFF_BASE ** attempt  (unbounded)
+                    delay = min(_A2A_BACKOFF_BASE ** attempt, _A2A_MAX_DELAY_SECONDS)
                     logger.warning(
                         "A2A request timed out, retrying (attempt %s/%s) after %ss.",
                         attempt + 2,
@@ -121,7 +135,9 @@ async def send_a2a_with_retry(client, message):
                 ) from e
             if _is_no_payload_error(e):
                 if attempt < _A2A_MAX_ATTEMPTS - 1:
-                    delay = _A2A_BACKOFF_BASE ** attempt
+                    # Lungo_Improvement_Opt9: clamp delay to _A2A_MAX_DELAY_SECONDS (8s).
+                    # Old code: delay = _A2A_BACKOFF_BASE ** attempt  (unbounded)
+                    delay = min(_A2A_BACKOFF_BASE ** attempt, _A2A_MAX_DELAY_SECONDS)
                     logger.warning(
                         "A2A request had no response, retrying (attempt %s/%s) after %ss.",
                         attempt + 2,

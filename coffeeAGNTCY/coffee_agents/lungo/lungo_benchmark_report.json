@@ -1,0 +1,245 @@
+{
+  "sequential": {
+    "run_label": "Sequential",
+    "url": "http://localhost:8000",
+    "total_requests": 12,
+    "successful_requests": 12,
+    "failed_requests": 0,
+    "latencies_ms": [
+      2708.7385,
+      24197.76608300003,
+      24208.088124999987,
+      24236.81554199999,
+      24447.648000000016,
+      24570.909709000007,
+      24614.463541999983,
+      24737.345833000007,
+      26534.79758399999,
+      61960.199541999995,
+      62180.506084,
+      62600.7465
+    ],
+    "avg_latency_ms": 32249.84,
+    "min_latency_ms": 2708.74,
+    "max_latency_ms": 62600.75,
+    "p95_latency_ms": 62600.75,
+    "total_wall_time_s": 387.013,
+    "throughput_req_per_s": 0.031,
+    "cache_hits": 1,
+    "cache_misses": 10,
+    "cache_hit_rate_pct": 9.1,
+    "results": [
+      {
+        "prompt": "What is the current yield for the Brazil farm?",
+        "status_code": 200,
+        "latency_ms": 2708.7385,
+        "response_text": "{\"response\":\"The current yield for the Brazil farm is 2,500,000 pounds.\",\"session_id\":\"lungo.auction_supervisor_94557add-3d91-4962-a65a-065bf336bf50\"}",
+        "error": null
+      },
+      {
+        "prompt": "How much coffee does Colombia have in stock?",
+        "status_code": 200,
+        "latency_ms": 62600.7465,
+        "response_text": "{\"response\":\"I encountered an issue retrieving information from the Colombia farm. Please try again later.\",\"session_id\":\"lungo.auction_supervisor_8e1e7015-12b9-4d2e-8ede-2d742ba0b450\"}",
+        "error": null
+      },
+      {
+        "prompt": "What is Vietnam's current coffee yield?",
+        "status_code": 200,
+        "latency_ms": 24236.81554199999,
+        "response_text": "{\"response\":\"I encountered an issue retrieving information from the Vietnam farm. Please try again later.\",\"session_id\":\"lungo.auction_supervisor_3a531f9b-e3f9-42b3-8a7d-bee3c4a316d4\"}",
+        "error": null
+      },
+      {
+        "prompt": "Give me the inventory for all farms.",
+        "status_code": 200,
+        "latency_ms": 62180.506084,
+        "response_text": "{\"response\":\"Here is the current coffee yield inventory from the farms:\\n\\nNo response from Brazil Coffee Farm, Colombia Coffee Farm, Vietnam Coffee Farm. These farms may be unavailable or slow to res",
+        "error": null
+      },
+      {
+        "prompt": "What is the current yield for the Brazil farm?",
+        "status_code": 200,
+        "latency_ms": 24208.088124999987,
+        "response_text": "{\"response\":\"I encountered an issue retrieving information from the Brazil farm. Please try again later.\",\"session_id\":\"lungo.auction_supervisor_1f11f32c-a20e-4f1a-b1b7-89b67789d816\"}",
+        "error": null
+      },
+      {
+        "prompt": "What is the current yield for the Brazil farm?",
+        "status_code": 200,
+        "latency_ms": 24614.463541999983,
+        "response_text": "{\"response\":\"I encountered an issue retrieving information from the Brazil farm. Please try again later.\",\"session_id\":\"lungo.auction_supervisor_fee378c8-0744-461c-a946-d77d67ebf8eb\"}",
+        "error": null
+      },
+      {
+        "prompt": "What is the current yield for the Brazil farm?",
+        "status_code": 200,
+        "latency_ms": 26534.79758399999,
+        "response_text": "{\"response\":\"I encountered an issue retrieving information from the Brazil farm. Please try again later.\",\"session_id\":\"lungo.auction_supervisor_befd6ead-ae8d-40db-a8ca-5e0e88be0ec4\"}",
+        "error": null
+      },
+      {
+        "prompt": "How much coffee does Colombia have in stock?",
+        "status_code": 200,
+        "latency_ms": 24570.909709000007,
+        "response_text": "{\"response\":\"I encountered an issue retrieving information from the Colombia farm. Please try again later.\",\"session_id\":\"lungo.auction_supervisor_aca756fc-02d9-46a1-9b9a-fbb40d62f172\"}",
+        "error": null
+      },
+      {
+        "prompt": "What is Vietnam's current coffee yield?",
+        "status_code": 200,
+        "latency_ms": 24447.648000000016,
+        "response_text": "{\"response\":\"I encountered an issue retrieving information from the Vietnam farm. Please try again later.\",\"session_id\":\"lungo.auction_supervisor_17683f88-9f1d-4e4c-9bbf-debbc656a0c6\"}",
+        "error": null
+      },
+      {
+        "prompt": "Give me the inventory for all farms.",
+        "status_code": 200,
+        "latency_ms": 61960.199541999995,
+        "response_text": "{\"response\":\"Here is the current coffee yield inventory from the farms:\\n\\nNo response from Brazil Coffee Farm, Colombia Coffee Farm, Vietnam Coffee Farm. These farms may be unavailable or slow to res",
+        "error": null
+      },
+      {
+        "prompt": "What is the current yield for the Brazil farm?",
+        "status_code": 200,
+        "latency_ms": 24737.345833000007,
+        "response_text": "{\"response\":\"I encountered an issue retrieving information from the Brazil farm. Please try again later.\",\"session_id\":\"lungo.auction_supervisor_4c05a358-0804-4fb8-afc7-7e3f5dd8dcd1\"}",
+        "error": null
+      },
+      {
+        "prompt": "What is the current yield for the Brazil farm?",
+        "status_code": 200,
+        "latency_ms": 24197.76608300003,
+        "response_text": "{\"response\":\"I encountered an issue retrieving information from the Brazil farm. Please try again later.\",\"session_id\":\"lungo.auction_supervisor_2c18077e-cb5c-40e1-a195-de2cdb2efa79\"}",
+        "error": null
+      }
+    ]
+  },
+  "concurrent": {
+    "run_label": "Concurrent",
+    "url": "http://localhost:8000",
+    "total_requests": 12,
+    "successful_requests": 12,
+    "failed_requests": 0,
+    "latencies_ms": [
+      24106.25595799996,
+      24278.179999999964,
+      24279.270542000006,
+      24476.660042000047,
+      24485.29895799999,
+      46375.79104099996,
+      46376.628917,
+      46376.70774999998,
+      46489.603875,
+      46872.693707999984,
+      62675.64737500004,
+      63543.641124999966
+    ],
+    "avg_latency_ms": 40028.03,
+    "min_latency_ms": 24106.26,
+    "max_latency_ms": 63543.64,
+    "p95_latency_ms": 63543.64,
+    "total_wall_time_s": 63.547,
+    "throughput_req_per_s": 0.189,
+    "cache_hits": 0,
+    "cache_misses": 0,
+    "cache_hit_rate_pct": 0.0,
+    "results": [
+      {
+        "prompt": "What is the current yield for the Brazil farm?",
+        "status_code": 200,
+        "latency_ms": 24279.270542000006,
+        "response_text": "{\"response\":\"I encountered an issue retrieving information from the Brazil farm. Please try again later.\",\"session_id\":\"lungo.auction_supervisor_341f32eb-f533-4188-a0ba-3741bcf518b4\"}",
+        "error": null
+      },
+      {
+        "prompt": "How much coffee does Colombia have in stock?",
+        "status_code": 200,
+        "latency_ms": 46376.70774999998,
+        "response_text": "{\"response\":\"I encountered an issue retrieving information from the Colombia farm. Please try again later.\",\"session_id\":\"lungo.auction_supervisor_63636d60-6237-4410-a519-96fb60745b21\"}",
+        "error": null
+      },
+      {
+        "prompt": "What is Vietnam's current coffee yield?",
+        "status_code": 200,
+        "latency_ms": 46376.628917,
+        "response_text": "{\"response\":\"I encountered an issue retrieving information from the Vietnam farm. Please try again later.\",\"session_id\":\"lungo.auction_supervisor_7d12c3ec-d7aa-4a58-93cf-6307e2e6fa15\"}",
+        "error": null
+      },
+      {
+        "prompt": "Give me the inventory for all farms.",
+        "status_code": 200,
+        "latency_ms": 62675.64737500004,
+        "response_text": "{\"response\":\"Here is the current coffee yield inventory from the farms:\\n\\nNo response from Brazil Coffee Farm, Colombia Coffee Farm, Vietnam Coffee Farm. These farms may be unavailable or slow to res",
+        "error": null
+      },
+      {
+        "prompt": "What is the current yield for the Brazil farm?",
+        "status_code": 200,
+        "latency_ms": 24278.179999999964,
+        "response_text": "{\"response\":\"I encountered an issue retrieving information from the Brazil farm. Please try again later.\",\"session_id\":\"lungo.auction_supervisor_f96e6130-1575-4816-8a1e-b0e3c89e6fa5\"}",
+        "error": null
+      },
+      {
+        "prompt": "What is the current yield for the Brazil farm?",
+        "status_code": 200,
+        "latency_ms": 46489.603875,
+        "response_text": "{\"response\":\"I encountered an issue retrieving information from the Brazil farm. Please try again later.\",\"session_id\":\"lungo.auction_supervisor_0cd57d93-00b9-42ef-9cc4-9ec71bc35d58\"}",
+        "error": null
+      },
+      {
+        "prompt": "What is the current yield for the Brazil farm?",
+        "status_code": 200,
+        "latency_ms": 24485.29895799999,
+        "response_text": "{\"response\":\"I encountered an issue retrieving information from the Brazil farm. Please try again later.\",\"session_id\":\"lungo.auction_supervisor_5b541f98-6e42-4bcf-b680-17484300279d\"}",
+        "error": null
+      },
+      {
+        "prompt": "How much coffee does Colombia have in stock?",
+        "status_code": 200,
+        "latency_ms": 46872.693707999984,
+        "response_text": "{\"response\":\"I encountered an issue retrieving information from the Colombia farm. Please try again later.\",\"session_id\":\"lungo.auction_supervisor_d6a69a0f-2214-4c6d-bd88-0b3169c7e682\"}",
+        "error": null
+      },
+      {
+        "prompt": "What is Vietnam's current coffee yield?",
+        "status_code": 200,
+        "latency_ms": 24106.25595799996,
+        "response_text": "{\"response\":\"I encountered an issue retrieving information from the Vietnam farm. Please try again later.\",\"session_id\":\"lungo.auction_supervisor_f33cc77d-f27f-4d3f-97a1-6f2ee84e40b1\"}",
+        "error": null
+      },
+      {
+        "prompt": "Give me the inventory for all farms.",
+        "status_code": 200,
+        "latency_ms": 63543.641124999966,
+        "response_text": "{\"response\":\"Here is the current coffee yield inventory from the farms:\\n\\nNo response from Brazil Coffee Farm, Colombia Coffee Farm, Vietnam Coffee Farm. These farms may be unavailable or slow to res",
+        "error": null
+      },
+      {
+        "prompt": "What is the current yield for the Brazil farm?",
+        "status_code": 200,
+        "latency_ms": 24476.660042000047,
+        "response_text": "{\"response\":\"I encountered an issue retrieving information from the Brazil farm. Please try again later.\",\"session_id\":\"lungo.auction_supervisor_be07fd27-0278-4166-96ff-db0a59afc40a\"}",
+        "error": null
+      },
+      {
+        "prompt": "What is the current yield for the Brazil farm?",
+        "status_code": 200,
+        "latency_ms": 46375.79104099996,
+        "response_text": "{\"response\":\"I encountered an issue retrieving information from the Brazil farm. Please try again later.\",\"session_id\":\"lungo.auction_supervisor_76a3b569-f44a-4197-a0de-1b99b503f147\"}",
+        "error": null
+      }
+    ]
+  },
+  "memory_before_mib": 29.14,
+  "memory_after_mib": 15.28,
+  "cache_stats": {
+    "hits": 1,
+    "misses": 10,
+    "total": 11,
+    "hit_rate_pct": 9.1,
+    "cache_size": 0,
+    "cache_maxsize": 256,
+    "cache_ttl_seconds": 60
+  }
+}

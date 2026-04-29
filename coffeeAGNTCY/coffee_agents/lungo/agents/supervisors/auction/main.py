@@ -21,6 +21,8 @@ from common.cors import get_cors_allowed_origins
 
 from agents.supervisors.auction.graph import shared
 from agents.supervisors.auction.api import create_apps_router
+# Lungo_Improvement_Opt4: import metrics router so /metrics/cache is reachable by benchmark
+from agents.supervisors.auction.api import create_metrics_router
 from config.config import DEFAULT_MESSAGE_TRANSPORT, LLM_MODEL, HOT_RELOAD_MODE, OTEL_SDK_DISABLED
 from pathlib import Path
 from common.streaming_capability import require_streaming_capability
@@ -73,6 +75,8 @@ app.add_middleware(
 )
 
 app.include_router(create_apps_router())
+# Lungo_Improvement_Opt4: register /metrics/cache endpoint for benchmark + Grafana
+app.include_router(create_metrics_router())
 
 class PromptRequest(BaseModel):
   prompt: str

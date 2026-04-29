@@ -13,6 +13,8 @@ services:
       - FARM_AGENT_PORT=9999
       - DEFAULT_MESSAGE_TRANSPORT=${DEFAULT_MESSAGE_TRANSPORT:-NATS}
       - TRANSPORT_SERVER_ENDPOINT=${TRANSPORT_SERVER_ENDPOINT:-nats://nats:4222}
+      # Lungo_Improvement: override SLIM_SERVER for Docker (slim is the compose service name)
+      - SLIM_SERVER=slim:46357
       - OTLP_HTTP_ENDPOINT=${OTLP_HTTP_ENDPOINT:-http://otel-collector:4318}
       - IDENTITY_AUTH_ENABLED=disabled
       - ENABLE_HTTP=true
@@ -20,6 +22,8 @@ services:
       - "9999:9999"
     depends_on:
       nats:
+        condition: service_started
+      slim:
         condition: service_started
     profiles:
       - farms
@@ -37,6 +41,8 @@ services:
       - FARM_AGENT_PORT=9998
       - DEFAULT_MESSAGE_TRANSPORT=${DEFAULT_MESSAGE_TRANSPORT:-NATS}
       - TRANSPORT_SERVER_ENDPOINT=${TRANSPORT_SERVER_ENDPOINT:-nats://nats:4222}
+      # Lungo_Improvement: override SLIM_SERVER for Docker (slim is the compose service name)
+      - SLIM_SERVER=slim:46357
       - OTLP_HTTP_ENDPOINT=${OTLP_HTTP_ENDPOINT:-http://otel-collector:4318}
       - ENABLE_HTTP=true
       - IDENTITY_AUTH_ENABLED=${IDENTITY_AUTH_ENABLED:-} # Disabled by default
@@ -46,6 +52,8 @@ services:
       - "9998:9998"
     depends_on:
       nats:
+        condition: service_started
+      slim:
         condition: service_started
     profiles:
       - farms
@@ -63,6 +71,8 @@ services:
       - FARM_AGENT_PORT=9997
       - DEFAULT_MESSAGE_TRANSPORT=${DEFAULT_MESSAGE_TRANSPORT:-NATS}
       - TRANSPORT_SERVER_ENDPOINT=${TRANSPORT_SERVER_ENDPOINT:-nats://nats:4222}
+      # Lungo_Improvement: override SLIM_SERVER for Docker (slim is the compose service name)
+      - SLIM_SERVER=slim:46357
       - OTLP_HTTP_ENDPOINT=${OTLP_HTTP_ENDPOINT:-http://otel-collector:4318}
       - ENABLE_HTTP=true
       - IDENTITY_AUTH_ENABLED=${IDENTITY_AUTH_ENABLED:-} # Disabled by default
@@ -72,6 +82,8 @@ services:
       - "9997:9997"
     depends_on:
       nats:
+        condition: service_started
+      slim:
         condition: service_started
     profiles:
       - farms
@@ -118,6 +130,11 @@ services:
       - FARM_AGENT_PORT=9999
       - DEFAULT_MESSAGE_TRANSPORT=${DEFAULT_MESSAGE_TRANSPORT:-NATS}
       - TRANSPORT_SERVER_ENDPOINT=${TRANSPORT_SERVER_ENDPOINT:-nats://nats:4222}
+      # Lungo_Improvement: override SLIM_SERVER for Docker — slim:46357 is the compose service name.
+      # The .env sets SLIM_SERVER=localhost:46357 for local dev, but inside Docker the SLIM
+      # service is reachable as slim:46357 (Docker Compose DNS). Without this override, shared.py
+      # builds SlimRpcConfig(slim_url="http://localhost:46357") which gets "Connection refused".
+      - SLIM_SERVER=slim:46357
       - OTLP_HTTP_ENDPOINT=${OTLP_HTTP_ENDPOINT:-http://otel-collector:4318}
       - IDENTITY_AUTH_ENABLED=${IDENTITY_AUTH_ENABLED:-} # Disabled by default
       - IDENTITY_SERVICE_API_KEY=${IDENTITY_SERVICE_API_KEY_AUCTION_SUPERVISOR:-dummy_api_key}
@@ -126,6 +143,8 @@ services:
       - "8000:8000"
     depends_on:
       nats:
+        condition: service_started
+      slim:
         condition: service_started
     profiles:
       - farms

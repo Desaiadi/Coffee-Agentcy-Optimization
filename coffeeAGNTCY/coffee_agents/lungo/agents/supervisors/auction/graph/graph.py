@@ -145,7 +145,12 @@ class ExchangeGraph:
         )
 
         chain = prompt | self.supervisor_llm
-        response = chain.invoke({"user_message": user_message})
+        # Lungo_Improvement_Opt1: replaced blocking chain.invoke with async chain.ainvoke
+        # Old code blocked the entire asyncio event loop, preventing other coroutines from running.
+        # chain.invoke() is synchronous and pins the event-loop thread for the full LLM round-trip.
+        # chain.ainvoke() is non-blocking and lets the event loop handle other requests concurrently.
+        # response = chain.invoke({"user_message": user_message})
+        response = await chain.ainvoke({"user_message": user_message})
         intent = response.content.strip().lower()
 
         logger.info(f"Supervisor decided: {intent}")

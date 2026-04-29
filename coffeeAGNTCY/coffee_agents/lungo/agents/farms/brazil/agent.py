@@ -81,7 +81,11 @@ def handle_orders_tool(user_message: str) -> str:
 
 # --- 3. Intent Classification ---
 
-def classify_intent(user_message: str) -> IntentType:
+# Lungo_Improvement_Opt3: converted classify_intent from sync to async.
+# Old code called llm.complete() which is synchronous and blocks the event loop.
+# llm.acomplete() is the async equivalent — it releases the event loop while waiting
+# for the LLM response, allowing other coroutines (other requests) to run concurrently.
+async def classify_intent(user_message: str) -> IntentType:
     prompt = (
         "You are a coffee farm manager in Brazil who delegates farm cultivation "
         "and global sales. Based on the user's message, determine if it's "
@@ -93,7 +97,9 @@ def classify_intent(user_message: str) -> IntentType:
         "- If unsure, respond 'general'.\n\n"
         f"User message: {user_message}"
     )
-    resp = llm.complete(prompt, formatted=True)
+    # Lungo_Improvement_Opt3: was llm.complete() (sync/blocking) — replaced with await llm.acomplete()
+    # resp = llm.complete(prompt, formatted=True)
+    resp = await llm.acomplete(prompt, formatted=True)
     intent_raw = resp.text.strip().lower()
     logger.info(f"Supervisor intent raw: {intent_raw}")
 
@@ -104,28 +110,40 @@ def classify_intent(user_message: str) -> IntentType:
         return "orders"
     return "general"
 
+# Lungo_Improvement_Opt2: module-level singleton FunctionAgents.
+# Old code recreated FunctionAgent on every request inside run_brazil_farm_routing(),
+# which re-initialises the LlamaIndex internals (tool registry, LLM wrapper, prompt builder)
+# on every call — pure overhead. These objects are stateless between requests; creating them
+# once at import time and reusing them cuts per-request CPU and allocation cost significantly.
+_inventory_agent = FunctionAgent(
+    tools=[handle_inventory_tool],
+    llm=llm,
+    system_prompt="Return only the exact output from the tool. Do not add any additional text or explanation."
+)
+_orders_agent = FunctionAgent(
+    tools=[handle_orders_tool],
+    llm=llm,
+    system_prompt="Return only the exact output from the tool. Do not add any additional text or explanation."
+)
+logger.info("[Lungo_Improvement_Opt2] Brazil farm singleton FunctionAgents initialised at module load")
+
 # --- 4. Routing Function ---
 
 # Routes to appropriate FunctionAgent based on intent classification
 
 async def run_brazil_farm_routing(user_message: str) -> str:
-    """Route to appropriate FunctionAgent based on intent with lazy initialization."""
-    intent = classify_intent(user_message)
+    """Route to appropriate FunctionAgent based on intent. Agents are module-level singletons (Opt-2)."""
+    # Lungo_Improvement_Opt3: classify_intent is now async (was sync)
+    intent = await classify_intent(user_message)
     if intent == "inventory":
-        inventory_agent = FunctionAgent(
-            tools=[handle_inventory_tool],
-            llm=llm,
-            system_prompt="Return only the exact output from the tool. Do not add any additional text or explanation."
-        )
-        response = await inventory_agent.run(user_message)
+        # Lungo_Improvement_Opt2: reuse module-level singleton instead of creating new FunctionAgent
+        # Old code was: inventory_agent = FunctionAgent(tools=[handle_inventory_tool], llm=llm, ...)
+        response = await _inventory_agent.run(user_message)
         return str(response)
     elif intent == "orders":
-        orders_agent = FunctionAgent(
-            tools=[handle_orders_tool],
-            llm=llm,
-            system_prompt="Return only the exact output from the tool. Do not add any additional text or explanation."
-        )
-        response = await orders_agent.run(user_message)
+        # Lungo_Improvement_Opt2: reuse module-level singleton instead of creating new FunctionAgent
+        # Old code was: orders_agent = FunctionAgent(tools=[handle_orders_tool], llm=llm, ...)
+        response = await _orders_agent.run(user_message)
         return str(response)
     else:
         return (

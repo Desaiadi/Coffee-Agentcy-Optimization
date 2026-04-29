@@ -1,11 +1,54 @@
 # Copyright AGNTCY Contributors (https://github.com/agntcy)
 # SPDX-License-Identifier: Apache-2.0
 
+import asyncio
 import copy
 import logging
+import time
 from typing import Any, Union, Literal, NoReturn
 from uuid import uuid4
 from pydantic import BaseModel
+
+# Lungo_Improvement_Opt4: TTL cache for farm yield inventory responses.
+# Farm yields change slowly (minutes to hours). Caching identical prompts for 60 seconds
+# avoids a full A2A round-trip + LLM call for repeated identical queries.
+# cachetools.TTLCache is O(1) get/set and auto-expires entries after `ttl` seconds.
+from cachetools import TTLCache
+
+_yield_cache: TTLCache = TTLCache(maxsize=256, ttl=60)
+_cache_hits: int = 0
+_cache_misses: int = 0
+_cache_lock = asyncio.Lock()  # protects _cache_hits / _cache_misses counters
+
+# Lungo_Improvement_Opt5: A2A client cache — reuse clients across calls.
+# a2a_client_factory.create() is expensive: it negotiates a SLIM/NATS session.
+# Keying by (farm_slug, transport) means the session is created once per farm
+# and shared across all subsequent requests, removing per-request setup latency.
+_a2a_client_cache: dict[tuple[str, str], Any] = {}
+
+# Lungo_Improvement_Opt8: asyncio.Semaphore to cap concurrent A2A calls.
+# Without a cap, a broadcast or burst of concurrent requests could overwhelm the
+# SLIM transport layer with simultaneous sessions. The semaphore limits active
+# A2A in-flight calls to 5, smoothing load without serialising requests.
+_a2a_semaphore = asyncio.Semaphore(5)
+
+def get_cache_stats() -> dict:
+    """
+    Lungo_Improvement_Opt4: Return live TTL cache statistics.
+    Called by the /metrics/cache endpoint so the benchmark script and Grafana
+    can observe cache behaviour without parsing logs.
+    """
+    total = _cache_hits + _cache_misses
+    hit_rate = round((_cache_hits / total * 100), 1) if total > 0 else 0.0
+    return {
+        "hits": _cache_hits,
+        "misses": _cache_misses,
+        "total": total,
+        "hit_rate_pct": hit_rate,
+        "cache_size": len(_yield_cache),
+        "cache_maxsize": _yield_cache.maxsize,
+        "cache_ttl_seconds": _yield_cache.ttl,
+    }
 
 from a2a.types import (
     AgentCard,
@@ -180,6 +223,8 @@ async def get_farm_yield_inventory(prompt: str, farm: str) -> str:
         A2AAgentError: If there's an issue with farm identification, communication, or the farm agent returns an error.
         ValueError: For invalid input arguments.
     """
+    global _cache_hits, _cache_misses
+
     logger.info("entering get_farm_yield_inventory tool with prompt: %s, farm: %s", prompt, farm)
     if not farm:
         raise ValueError("No farm was provided. Please provide a farm to get the yield from.")
@@ -189,20 +234,40 @@ async def get_farm_yield_inventory(prompt: str, farm: str) -> str:
         raise A2AAgentError(f"Farm '{farm}' not recognized. Available farms "
                              f"are: {', '.join(farm_registry.slugs())}.")
 
-    try:
-        card = copy.deepcopy(card)
-        # Workaround: ioa-observe-sdk instruments SRPCTransport.send_message_streaming
-        # with a coroutine wrapper instead of an async generator, causing TypeError.
-        # Commented out — not needed here since card.capabilities.streaming defaults
-        # to the server value. Re-enable if tracing is on and streaming breaks.
-        # See: https://github.com/agntcy/observe/issues/114
-        if card.capabilities is None:
-            from a2a.types import AgentCapabilities
-            card.capabilities = AgentCapabilities(streaming=False)
-        else:
-            card.capabilities.streaming = False
+    # Lungo_Improvement_Opt4: check TTL cache before making an A2A call.
+    # Cache key combines farm slug + normalised prompt so different questions don't collide.
+    cache_key = (farm, prompt.strip().lower())
+    cached = _yield_cache.get(cache_key)
+    if cached is not None:
+        _cache_hits += 1
+        logger.info("[Lungo_Improvement_Opt4] Cache HIT for farm=%s  hits=%d misses=%d", farm, _cache_hits, _cache_misses)
+        return cached
+    _cache_misses += 1
+    logger.info("[Lungo_Improvement_Opt4] Cache MISS for farm=%s  hits=%d misses=%d", farm, _cache_hits, _cache_misses)
 
-        client = await a2a_client_factory.create(card)
+    try:
+        # Lungo_Improvement_Opt6: replaced copy.deepcopy(card) with model_copy().
+        # copy.deepcopy() serialises and deserialises the entire Pydantic object graph
+        # (including nested models) which is slow and GC-heavy.
+        # model_copy() is Pydantic-native: it copies only the fields we mutate (capabilities)
+        # and shares everything else by reference — much cheaper.
+        # Old code: card = copy.deepcopy(card)
+        from a2a.types import AgentCapabilities
+        card = card.model_copy(update={"capabilities": AgentCapabilities(streaming=False)})
+        logger.debug("[Lungo_Improvement_Opt6] Used model_copy for farm card: %s", farm)
+
+        # Lungo_Improvement_Opt5: reuse cached A2A client for this farm.
+        # a2a_client_factory.create() opens a SLIM/NATS session — expensive per-call.
+        # We cache the client keyed by (farm_url, preferred_transport) so the session
+        # is established once and reused for all subsequent requests to the same farm.
+        transport_key = getattr(card, "preferred_transport", DEFAULT_MESSAGE_TRANSPORT)
+        client_cache_key = (farm, str(transport_key))
+        if client_cache_key not in _a2a_client_cache:
+            logger.info("[Lungo_Improvement_Opt5] Creating new A2A client for farm=%s", farm)
+            _a2a_client_cache[client_cache_key] = await a2a_client_factory.create(card)
+        else:
+            logger.info("[Lungo_Improvement_Opt5] Reusing cached A2A client for farm=%s", farm)
+        client = _a2a_client_cache[client_cache_key]
 
         message = Message(
             messageId=str(uuid4()),
@@ -210,10 +275,43 @@ async def get_farm_yield_inventory(prompt: str, farm: str) -> str:
             parts=[Part(TextPart(text=prompt))],
         )
 
-        events = await send_a2a_with_retry(client, message)
+        # Lungo_Improvement_Opt8: gate A2A calls through a semaphore.
+        # Without a limit, concurrent requests could open unlimited simultaneous SLIM sessions,
+        # overwhelming the transport layer. Semaphore(5) caps concurrent in-flight A2A calls.
+        t0 = time.perf_counter()
+        async with _a2a_semaphore:
+            logger.debug("[Lungo_Improvement_Opt8] Acquired semaphore for farm=%s", farm)
+            try:
+                events = await send_a2a_with_retry(client, message)
+            except Exception as session_exc:
+                # Lungo_Improvement_Opt5 (stale-client eviction): if A2A fails with a
+                # session error, the cached client has a dead SLIM session.  Evict it so the
+                # next call creates a fresh client instead of re-using the broken one.
+                if "session" in str(session_exc).lower() or "handshake" in str(session_exc).lower():
+                    if client_cache_key in _a2a_client_cache:
+                        del _a2a_client_cache[client_cache_key]
+                        logger.warning(
+                            "[Lungo_Improvement_Opt5] Evicted stale A2A client for farm=%s (cause: %s)",
+                            farm, session_exc,
+                        )
+                        # Retry once with a fresh client
+                        fresh_client = await a2a_client_factory.create(card)
+                        _a2a_client_cache[client_cache_key] = fresh_client
+                        logger.info("[Lungo_Improvement_Opt5] Reconnected A2A client for farm=%s", farm)
+                        events = await send_a2a_with_retry(fresh_client, message)
+                    else:
+                        raise
+                else:
+                    raise
+        elapsed_ms = (time.perf_counter() - t0) * 1000
+        logger.info("[Lungo_Improvement] A2A round-trip for farm=%s took %.1f ms", farm, elapsed_ms)
+
         result_text = _extract_text_from_events(events)
 
         if result_text:
+            # Lungo_Improvement_Opt4: store successful result in TTL cache
+            _yield_cache[cache_key] = result_text
+            logger.info("[Lungo_Improvement_Opt4] Cached result for farm=%s (cache size=%d)", farm, len(_yield_cache))
             return result_text
         else:
             raise A2AAgentError(f"Farm '{farm}' returned no text content.")
@@ -256,10 +354,15 @@ async def get_all_farms_yield_inventory(prompt: str) -> str:
 
     try:
         # pick any card to initialize the client, will use the recipient list to route to the correct farms
-        card = copy.deepcopy(farm_registry.cards()[0]) # avoid mutating the singleton card
+        # Lungo_Improvement_Opt6: replaced copy.deepcopy() with model_copy() — Pydantic-native shallow copy.
+        # copy.deepcopy() walks the entire object graph; model_copy() only copies what we override.
+        # Old code: card = copy.deepcopy(farm_registry.cards()[0])
+        card = farm_registry.cards()[0].model_copy(update={"preferred_transport": DEFAULT_MESSAGE_TRANSPORT.lower()})
+        logger.debug("[Lungo_Improvement_Opt6] Used model_copy for broadcast card")
 
         # override preferred transport to ensure we use the intended publish-subscribe transport for broadcasts
-        card.preferred_transport = DEFAULT_MESSAGE_TRANSPORT.lower()
+        # Lungo_Improvement_Opt6: transport already set via model_copy above — removed redundant assignment
+        # card.preferred_transport = DEFAULT_MESSAGE_TRANSPORT.lower()
         client = await a2a_client_factory.create(card)
 
         # create a broadcast message and collect responses
@@ -324,10 +427,15 @@ async def get_all_farms_yield_inventory_streaming(prompt: str):
     try:
         logger.info(f"Broadcasting to {len(recipients)} farms: {', '.join(recipients)}")
 
-        card = copy.deepcopy(farm_registry.cards()[0]) # avoid mutating the singleton card
+        # Lungo_Improvement_Opt6: replaced copy.deepcopy() with model_copy() for streaming broadcast.
+        # Same reasoning as non-streaming path: model_copy is faster and GC-cheaper than deepcopy.
+        # Old code: card = copy.deepcopy(farm_registry.cards()[0])
+        card = farm_registry.cards()[0].model_copy(update={"preferred_transport": DEFAULT_MESSAGE_TRANSPORT.lower()})
+        logger.debug("[Lungo_Improvement_Opt6] Used model_copy for streaming broadcast card")
 
         # override preferred transport to ensure we use the intended publish-subscribe transport for broadcasts
-        card.preferred_transport = DEFAULT_MESSAGE_TRANSPORT.lower()
+        # Lungo_Improvement_Opt6: transport already set via model_copy above — removed redundant assignment
+        # card.preferred_transport = DEFAULT_MESSAGE_TRANSPORT.lower()
         client = await a2a_client_factory.create(card)
 
         # Get the async generator for streaming responses
@@ -437,17 +545,24 @@ async def create_order(farm: str, quantity: int, price: float) -> str:
         raise A2AAgentError(f"Identity verification failed for farm '{farm}'. Details: {e}")
 
     try:
-        card = copy.deepcopy(card)  # avoid mutating the singleton card
+        # Lungo_Improvement_Opt6: replaced copy.deepcopy(card) with model_copy() for order creation.
+        # model_copy() is Pydantic-native — no recursive serialisation, much faster than deepcopy.
+        # Old code: card = copy.deepcopy(card)
+        from a2a.types import AgentCapabilities
+        card = card.model_copy(update={"capabilities": AgentCapabilities(streaming=False)})
+        logger.debug("[Lungo_Improvement_Opt6] Used model_copy for create_order card: %s", farm)
+
         # Workaround: ioa-observe-sdk instruments SRPCTransport.send_message_streaming
         # with a coroutine wrapper (return await) instead of an async generator
         # (async for/yield), causing "TypeError: 'coroutine' object is not an
         # async iterator". Force the non-streaming path until fixed upstream.
         # See: https://github.com/agntcy/observe/issues/114
-        if card.capabilities is None:
-            from a2a.types import AgentCapabilities
-            card.capabilities = AgentCapabilities(streaming=False)
-        else:
-            card.capabilities.streaming = False
+        # Lungo_Improvement_Opt6: streaming=False is now set inline via model_copy above.
+        # if card.capabilities is None:
+        #     from a2a.types import AgentCapabilities
+        #     card.capabilities = AgentCapabilities(streaming=False)
+        # else:
+        #     card.capabilities.streaming = False
 
         client = await a2a_client_factory.create(card)
 
@@ -494,20 +609,21 @@ async def get_order_details(order_id: str) -> str:
 
     try:
         # pick any card to initialize the client
-        card = copy.deepcopy(farm_registry.cards()[0]) # avoid mutating the singleton card
-        # override preferred transport to ensure direct communication for order creation
-        card.preferred_transport = InterfaceTransport.SLIM_RPC
+        # Lungo_Improvement_Opt6: replaced copy.deepcopy() with model_copy() for get_order_details.
+        # Sets preferred_transport and capabilities.streaming=False in one atomic model_copy call.
+        # Old code: card = copy.deepcopy(farm_registry.cards()[0])
+        from a2a.types import AgentCapabilities
+        card = farm_registry.cards()[0].model_copy(update={
+            "preferred_transport": InterfaceTransport.SLIM_RPC,
+            "capabilities": AgentCapabilities(streaming=False),
+        })
+        logger.debug("[Lungo_Improvement_Opt6] Used model_copy for get_order_details card")
 
         # Workaround: ioa-observe-sdk instruments SRPCTransport.send_message_streaming
         # with a coroutine wrapper instead of an async generator, causing TypeError.
-        # Commented out — not needed here since card.capabilities.streaming defaults
-        # to the server value. Re-enable if tracing is on and streaming breaks.
-        # See: https://github.com/agntcy/observe/issues/114
-        if card.capabilities is None:
-            from a2a.types import AgentCapabilities
-            card.capabilities = AgentCapabilities(streaming=False)
-        else:
-            card.capabilities.streaming = False
+        # Lungo_Improvement_Opt6: now handled inline via model_copy above.
+        # if card.capabilities is None: ...
+        # card.capabilities.streaming = False
 
         client = await a2a_client_factory.create(card)
 

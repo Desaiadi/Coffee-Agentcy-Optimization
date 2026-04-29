@@ -48,6 +48,8 @@ dependencies = [
     "cryptography>=44.0.1",
     "jsonschema>=4.0.0",
     "referencing>=0.28.0",
+    # Lungo_Improvement_Opt4: TTL response cache for farm yield queries
+    "cachetools>=5.3.0",
 ]
 
 [project.optional-dependencies]

@@ -29,6 +29,31 @@ def normalize_slug(value: str) -> str:
   """
   return value.lower().strip().replace(" ", "-")
 
+def create_metrics_router():
+    """
+    Lungo_Improvement_Opt4: Expose a /metrics/cache endpoint so the benchmark
+    script (and Grafana) can read live cache hit/miss counters without parsing logs.
+
+    Returns:
+        APIRouter: Router with GET /metrics/cache
+    """
+    from agents.supervisors.auction.graph.tools import get_cache_stats
+
+    router = APIRouter(prefix="/metrics", tags=["metrics"])
+
+    @router.get("/cache", summary="Yield-query cache statistics (Opt-4)")
+    async def cache_metrics():
+        """
+        Return TTL cache hit/miss counters and configuration.
+        Used by benchmark_lungo.py and can be wired into Grafana dashboards.
+        """
+        stats = get_cache_stats()
+        logger.info("[Lungo_Improvement_Opt4] Cache stats requested: %s", stats)
+        return stats
+
+    return router
+
+
 def create_apps_router():
   """
   Create a FastAPI router for managing app-related endpoints.
